@@ -15,18 +15,18 @@ async function getApi(event){
 
     
     let cityName = document.querySelector("#cityName").value
-    console.log(cityName)
 
-    // if (cityName = ""){
-    //     cityName =
+
+    // if (cityName === "" || cityName === null ){
+    //     console.log("huhhh")
+    //     cityName = "cairo"
     // }
-
-
 
 
     // usees the city name variable in the api url
     const geo = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=fcb350ee82ddff2621b2b58e91f4cf0e`
 
+    document.querySelector("#cityName").value = ""
     // fetches the data and assigs it to a variable
     const response = await fetch(geo)
     let fetchedData = await response.json()
@@ -92,17 +92,29 @@ const search = document.querySelector("#searchBtn")
 search.addEventListener('click', getApi );
 
 
-const pastBtn0 = document.querySelector('.btnReference0')
-pastBtn0.addEventListener('click', getApi );
+
+document.addEventListener('click', function(event){
+
+    idName = event.target.id
+    buttonApi()
+
+})
+
+
+
+
 
 
 
 
 //function to make cards
 function weatherCards(){
-for( i = 3; i < universalData.list.length; i+=8 ){
 
-    console.log(i)
+    let divWrap = document.createElement('div')
+    divWrap.setAttribute('class', 'row justify-content-center cardLocation')
+    document.querySelector('#weatherCards').append(divWrap)
+
+for( i = 3; i < universalData.list.length; i+=8 ){
 
     let divWrap = document.createElement('div')
     divWrap.setAttribute('class', 'row justify-content-center cardLocation')
@@ -150,9 +162,6 @@ for( i = 3; i < universalData.list.length; i+=8 ){
     weatherHum.textContent = `Humidity: ${universalData.list[i].main.humidity}`
     
 
-
-
-    document.querySelector('#weatherCards').append(divWrap)
     document.querySelector('.cardLocation').append(weatherCard)
     document.querySelector(`.card${i}`).append(weatherDay)
     document.querySelector(`.card${i}`).append(weatherSymb)
@@ -236,7 +245,8 @@ function previousSearch(){
 
             let button = document.createElement('button')
             button.setAttribute('type', 'button')
-            button.setAttribute('class', ` btnReference${i} list-group-item list-group-item-action`)
+            button.setAttribute('class', `searchBtncss list-group-item list-group-item-action`)
+            button.setAttribute('id', `${pastCitys[i]}`)
             button.textContent = `${pastCitys[i]}`
 
           
@@ -270,4 +280,65 @@ function refreshRemove(){
         btnPing.remove()
     }
 
+}
+
+
+
+
+
+async function buttonApi(){
+
+    if(idName === ""){
+        console.log("user just clicked the screen")
+
+    }else {
+
+        // usees the city name variable in the api url
+        const geo = `http://api.openweathermap.org/geo/1.0/direct?q=${idName}&appid=fcb350ee82ddff2621b2b58e91f4cf0e`
+
+        document.querySelector("#cityName").value = ""
+        // fetches the data and assigs it to a variable
+        const response = await fetch(geo)
+        let fetchedData = await response.json()
+
+        console.log(fetchedData)
+
+        //loophole for id click
+        if (fetchedData.length == 0){
+            console.log("break")
+            return;
+        }else{
+   
+            // assigns the latitude and longitute of the data to variables
+            let lat = fetchedData[0].lat
+            let lon = fetchedData[0].lon
+
+
+
+            console.log(lat);
+            console.log(lon);
+
+            // uses lat and lon variables pulled froom geocode api to get weather forcast of specific city
+            const forcastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=fcb350ee82ddff2621b2b58e91f4cf0e&units=imperial`
+            const todayUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=fcb350ee82ddff2621b2b58e91f4cf0e&units=imperial`
+
+            // fetches city weather foracst
+            const response2 = await fetch(forcastUrl)
+            let fiveDay = await response2.json()
+            console.log(fiveDay)
+            universalData  = fiveDay
+
+            //fetches todays weather
+            const response3 = await fetch(todayUrl)
+            let oneDay = await response3.json()
+            console.log(oneDay)
+            todayData  = oneDay
+    
+   
+            refreshRemove()
+            previousSearch()
+            dayBanner()
+            weatherCards()
+        }
+    }
 }

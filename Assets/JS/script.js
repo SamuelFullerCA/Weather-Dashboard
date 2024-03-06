@@ -10,7 +10,7 @@ let todayData;
 
 
 // function to use geolocation and 5 day forcast apis to generate weather for users desirec city
-async function getApi(event){
+async function apiFetch(event){
     event.preventDefault()
 
     
@@ -47,9 +47,9 @@ async function getApi(event){
 
     // fetches city weather foracst
     const response2 = await fetch(forcastUrl)
-    let fiveDay = await response2.json()
-    console.log(fiveDay)
-    universalData  = fiveDay
+    let fiveFrocast = await response2.json()
+    console.log(fiveFrocast)
+    universalData  = fiveFrocast
 
     //fetches todays weather
     const response3 = await fetch(todayUrl)
@@ -86,10 +86,11 @@ async function getApi(event){
     weatherCards()
 }
 
-//clicking search runs the getApi function
+//clicking search runs the apiFetch function
+pageLoad()
 previousSearch()
 const search = document.querySelector("#searchBtn")
-search.addEventListener('click', getApi );
+search.addEventListener('click', apiFetch );
 
 
 
@@ -100,24 +101,14 @@ document.addEventListener('click', function(event){
 
 })
 
-
-
-
-
-
-
-
 //function to make cards
 function weatherCards(){
 
-    let divWrap = document.createElement('div')
-    divWrap.setAttribute('class', 'row justify-content-center cardLocation')
-    document.querySelector('#weatherCards').append(divWrap)
+let divWrap = document.createElement('div')
+divWrap.setAttribute('class', 'row justify-content-center cardLocation')
+document.querySelector('#weatherCards').append(divWrap)
 
 for( i = 3; i < universalData.list.length; i+=8 ){
-
-    let divWrap = document.createElement('div')
-    divWrap.setAttribute('class', 'row justify-content-center cardLocation')
 
     //creates the card
     let weatherCard = document.createElement('section')
@@ -175,7 +166,6 @@ for( i = 3; i < universalData.list.length; i+=8 ){
 }
 }
 
-
 function dayBanner(){
 
    let currentDay = document.querySelector('#currentDay')
@@ -185,11 +175,11 @@ function dayBanner(){
 
    let currentCard = document.createElement('section')
    currentCard.setAttribute('class', 'dayBanner')
-   currentCard.textContent = 'Todays Weather:'
+   currentCard.textContent = 'Todays Weather in:'
 
    cityName = document.createElement('h4')
     // weatherDay.setAttribute('class', 'card-title')
-    cityName.textContent = `${todayData.name}`
+    cityName.textContent = `${todayData.name}, ${todayData.sys.country}`
 
     //creates the image of weather
     weatherSymb = document.createElement('div')
@@ -279,12 +269,13 @@ function refreshRemove(){
     if(btnPing !== null){
         btnPing.remove()
     }
+    
+    const guidePing = document.querySelector('#guidePing')
+    if(guidePing !== null){
+        guidePing.remove()
+    }
 
 }
-
-
-
-
 
 async function buttonApi(){
 
@@ -341,4 +332,16 @@ async function buttonApi(){
             weatherCards()
         }
     }
+}
+
+function pageLoad(){
+
+
+   let guide = document.createElement('h2')
+   guide.setAttribute("id", "guidePing")
+   guide.textContent = "Welcome to the Weather Dashboard! Search any city to see the forcast, or click on one of your recent searches. "
+
+
+   document.querySelector('#mainbody').append(guide)
+    
 }

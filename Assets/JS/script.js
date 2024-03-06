@@ -24,7 +24,7 @@ async function apiFetch(event){
 
 
     // usees the city name variable in the api url
-    const geo = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=fcb350ee82ddff2621b2b58e91f4cf0e`
+    const geo = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=fcb350ee82ddff2621b2b58e91f4cf0e`
 
     document.querySelector("#cityName").value = ""
     // fetches the data and assigs it to a variable
@@ -285,7 +285,7 @@ async function buttonApi(){
     }else {
 
         // usees the city name variable in the api url
-        const geo = `http://api.openweathermap.org/geo/1.0/direct?q=${idName}&appid=fcb350ee82ddff2621b2b58e91f4cf0e`
+        const geo = `https://api.openweathermap.org/geo/1.0/direct?q=${idName}&appid=fcb350ee82ddff2621b2b58e91f4cf0e`
 
         document.querySelector("#cityName").value = ""
         // fetches the data and assigs it to a variable
